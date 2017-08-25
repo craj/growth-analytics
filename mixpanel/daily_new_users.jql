@@ -1,0 +1,31 @@
+// query: count of daily new users
+
+function main() {
+  // get all events between date range
+  return Events({
+    from_date: '2017-01-01',
+    to_date: '2017-07-31'
+  })
+  // group them by user(distinct_id) and first active day
+  .groupByUser(function(state, events) {  // function to find first active day 
+    // set the default user state to today or any future date
+    state = state || {
+      first_active_day: new Date('2017-12-31')
+    };
+    // loop through user's every event and filter down to the least date/first active day
+    _.each(events, function(event) {
+      var time = new Date(event.time); // convert seconds to ms
+      var day = new Date(time.getFullYear(), time.getMonth(), time.getDate());
+      if (day < state.first_active_day) {   // if current event's date < user's current first active day - re-assign
+        state.first_active_day = getDay(day); // get date as YYYY-MM-DD and assign as user's first active day
+      }
+    });
+    return state;
+  })
+  // now group users by first active day to get new users for that day or count of daily new users
+  .groupBy(["value.first_active_day"], mixpanel.reducer.count())
+}
+
+function getDay(day) {
+  return new Date(day).toISOString().substr(0, 10);
+}

@@ -1,0 +1,24 @@
+// query: count of monthly active users
+
+function main() {
+  // get all events between date range 
+  return Events({
+    from_date: '2017-01-01',
+    to_date: '2017-07-31'
+  })
+  // group by user(distinct_id) and event.time in YYYY-MM format
+  .groupByUser([getMonth],
+    function() {return 1}
+  )
+  // group again by removing user(distinct_id) so that no. of rows of YYYY-MM gives the active user count for that month
+  .groupBy(
+      [function(row) { return row.key.slice(1) }],
+      mixpanel.reducer.count()
+    );
+}
+
+function getMonth(event) {
+  var month = (new Date(event.time).toISOString()).split('T')[0].split('-')[1];
+  var year = (new Date(event.time).toISOString()).split('T')[0].split('-')[0];
+  return year + '-' + month;
+}

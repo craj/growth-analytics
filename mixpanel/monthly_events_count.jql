@@ -1,0 +1,17 @@
+// query: monthly count of events to keep track of mixpanel subscription limits
+
+function main() {
+  // get all events between date range 
+  return Events({
+    from_date: '2017-01-01',
+    to_date: '2017-07-31'
+  })
+  // group by month (YYYY-MM)
+  .groupBy([getMonth], mixpanel.reducer.count());
+}
+
+function getMonth(event) {
+  var month = (new Date(event.time).toISOString()).split('T')[0].split('-')[1];
+  var year = (new Date(event.time).toISOString()).split('T')[0].split('-')[0];
+  return year + '-' + month;
+}

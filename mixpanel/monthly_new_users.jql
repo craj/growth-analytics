@@ -1,0 +1,31 @@
+// query: count of monthly new users
+
+function main() {
+  // get all events between date range
+  return Events({
+    from_date: '2017-01-01',
+    to_date: '2017-07-31'
+  })
+  // group them by user(distinct_id) and first active month
+  .groupByUser(function(state, events) {  // function to find first active month
+    // set the default user state to this month or any future month
+    state = state || {
+      first_active_month: new Date('2017-12-01')
+    };
+    // loop through user's every event and filter down to the least/first month the user was active
+    _.each(events, function(event) {
+      var time = new Date(event.time);
+      var fmonth = new Date(time.getFullYear(), time.getMonth());
+      if (fmonth < state.first_active_month) {   // if current event's month < user's current first active month re-assign
+        state.first_active_month = getMonth(fmonth); // get date as YYYY-MM and assign as user's first active month
+      }
+    });
+    return state;
+  })
+  // now group users by first active month to get new users for that month or count of monthly new users
+  .groupBy(["value.first_active_month"], mixpanel.reducer.count())
+}
+
+function getMonth(fmonth) {
+  return new Date(fmonth).toISOString().substr(0, 7);
+}
