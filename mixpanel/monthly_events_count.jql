@@ -1,4 +1,10 @@
-// query: monthly count of events to keep track of mixpanel subscription limits
+/* 
+ * Mixpanel JQL Query
+ * ==================
+ * Monthly count of events to keep track of mixpanel subscription limits
+ *
+ * src: git@github.com:craj/growth-analytics.git
+ */
 
 function main() {
   // get all events between date range 

@@ -1,4 +1,10 @@
-// query: count of monthly active users
+/* 
+ * Mixpanel JQL Query
+ * ==================
+ * Count of monthly active users
+ *
+ * src: git@github.com:craj/growth-analytics.git
+ */
 
 function main() {
   // get all events between date range 

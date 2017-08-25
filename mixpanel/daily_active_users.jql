@@ -1,4 +1,10 @@
-// query: count of daily active users
+/* 
+ * Mixpanel JQL Query
+ * ==================
+ * Count of daily active users
+ *
+ * src: git@github.com:craj/growth-analytics.git
+ */
 
 function main() {
   return Events({
@@ -21,9 +27,3 @@ return count + events.length;
 function getDay(event) {
   return new Date(event.time).toISOString().substr(0, 10);
 }
-
-// daily churned
-// monthly churned
-// first 50 events
-// user engagement days
-// Growth Accounting LTV
